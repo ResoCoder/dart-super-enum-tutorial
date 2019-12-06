@@ -11,22 +11,25 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   WeatherBloc(this.weatherRepository);
 
   @override
-  WeatherState get initialState => WeatherInitial();
+  WeatherState get initialState => WeatherState.initial();
 
   @override
   Stream<WeatherState> mapEventToState(
     WeatherEvent event,
   ) async* {
-    // Instantiating state classes directly
-    yield WeatherLoading();
-    // Using type checks for determining events
-    if (event is GetWeather) {
-      try {
-        final weather = await weatherRepository.fetchWeather(event.cityName);
-        yield WeatherLoaded(weather);
-      } on NetworkError {
-        yield WeatherError("Couldn't fetch weather. Is the device online?");
-      }
+    yield WeatherState.loading();
+    yield* event.when(
+      getWeather: (e) => mapGetWeatherToState(e),
+    );
+  }
+
+  Stream<WeatherState> mapGetWeatherToState(GetWeather e) async* {
+    try {
+      final weather = await weatherRepository.fetchWeather(e.cityName);
+      yield WeatherState.loaded(weather: weather);
+    } on NetworkError {
+      yield WeatherState.error(
+          message: "Couldn't fetch weather. Is the device online?");
     }
   }
 }

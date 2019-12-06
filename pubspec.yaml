@@ -19,12 +19,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  super_enum: ^0.2.0
   flutter_bloc: ^2.1.1
   equatable: ^1.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner:
+  super_enum_generator: ^0.2.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
